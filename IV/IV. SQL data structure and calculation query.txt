@@ -1,0 +1,33 @@
+-- Creating the US_gas_production table
+CREATE TABLE US_gas_production (
+    Well_ID INT,
+    WellName VARCHAR(255),
+    Operator_ID INT, -- Reference to a separate table of operators
+    US_State VARCHAR(50),
+    Longitude FLOAT,
+    Latitude FLOAT,
+    WellDepth_Feet INT,
+    ProductionMonth DATE,
+    Gas_production INT
+);
+
+-- Creating the Operators table
+CREATE TABLE Operators (
+    Operator_ID INT PRIMARY KEY,
+    Operator_Name VARCHAR(255)
+);
+
+-- Answer to question (b)
+-- It is inefficient to repeat the operator name in every row because it increases redundancy and the size of the table.
+-- A better approach is to create a separate table for operators with a unique ID,
+-- and then reference this ID in the main table (US_gas_production) using Operator_ID.
+
+-- Query to calculate total gas production by state, year, and month
+SELECT 
+    US_State, 
+    YEAR(ProductionMonth) AS Year, 
+    MONTH(ProductionMonth) AS Month, 
+    SUM(Gas_production) AS Total_Gas_Production
+FROM US_gas_production
+GROUP BY US_State, Year, Month
+ORDER BY US_State, Year, Month;
